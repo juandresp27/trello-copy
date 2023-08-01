@@ -14,7 +14,7 @@ export class LoginFormComponent {
 
   form = this.formBuilder.nonNullable.group({
     email: ['', [Validators.email, Validators.required]],
-    password: ['', [ Validators.required, Validators.minLength(6)]],
+    password: ['', [ Validators.required, Validators.minLength(8)]],
   });
   faPen = faPen;
   faEye = faEye;

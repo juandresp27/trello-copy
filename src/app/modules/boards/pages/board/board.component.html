@@ -1,26 +1,45 @@
-<div class="w-full h-full bg-sky-600 px-4 pb-4">
+<div class="w-full h-full px-4 pb-4" [ngClass]="colors">
   <div class="flex flex-col h-full">
     <div>
-      <h2 class="text-xl font-bold text-white my-4">Demo Board</h2>
+      <h2 class="text-xl font-bold text-white my-4">{{ board?.title }}</h2>
     </div>
-    <div class="flex grow items-start w-full h-full overflow-x-scroll" cdkDropListGroup>
-      <div class="rounded bg-gray-200 w-72 p-2 mr-3 shrink-0" *ngFor="let column of columns">
+    <div class="flex grow items-start w-full h-full overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-[#00000042] scrollbar-thumb-rounded-full scrollbar-track-rounded-full" cdkDropListGroup>
+      <div class="rounded bg-gray-200 w-72 p-2 mr-3 shrink-0" *ngFor="let list of board?.lists">
         <div class="flex justify-between py-1">
-          <h3 class="text-sm font-bold ml-2">{{ column.title }}</h3>
+          <h3 class="text-sm font-bold ml-2">{{ list.title }}</h3>
         </div>
 
-        <div class="text-sm mt-2 min-h-[2.5rem]" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="column.todos">
+        <div class="text-sm mt-2 min-h-[2.5rem]" [id]="list.id" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="list.cards">
           <div
-            (click)="openDialog(todo)"
-            *ngFor="let todo of column.todos"
+            (click)="openDialog(card)"
+            *ngFor="let card of list.cards"
             cdkDrag
             class="bg-white shadow p-2 rounded mt-2 border-b border-x-gray-300 cursor-pointer hover:bg-gray-400"
           >
-            {{ todo.title }}
+            {{ card.title }}
+          </div>
+        </div>
+        <div class="mt-5">
+          <app-btn *ngIf="!list.showCardForm" color="light" (click)="openFormCard(list)">Add a card</app-btn>
+          <div class="w-full" *ngIf="list.showCardForm">
+            <textarea [formControl]="inputCard" class="w-full rounded"></textarea>
+            <div class="flex space-x-2 justify-between">
+              <app-btn color="success" (click)="createCard(list)">Create</app-btn>
+              <app-btn color="light" (click)="closeCardForm(list)">Close</app-btn>
+            </div>
           </div>
         </div>
       </div>
-      <app-btn color="light" class="shrink-0" (click)="addColumn()">Add Column</app-btn>
+      <div class="shrink-0">
+        <app-btn *ngIf="!showListFrom" color="light" (click)="showListFrom = !showListFrom">Add another list</app-btn>
+        <div class="w-full bg-gray-200 py-2 px-4 rounded" *ngIf="showListFrom">
+          <textarea [formControl]="inputList" class="w-full rounded"></textarea>
+          <div class="flex space-x-2 justify-between">
+            <app-btn color="success" (click)="addList()">Create</app-btn>
+            <app-btn color="light" (click)="showListFrom = !showListFrom">Close</app-btn>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
